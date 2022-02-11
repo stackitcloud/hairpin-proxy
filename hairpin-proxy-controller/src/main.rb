@@ -49,10 +49,7 @@ class HairpinProxyController
     # Create rewrite rules
     rewrite_lines = hosts.map { |host| "    rewrite name #{host} #{DNS_REWRITE_DESTINATION} #{COMMENT_LINE_SUFFIX}" }
 
-    # Inject at the start of the main ".:53 { ... }" configuration block
-    main_server_line = cflines.index { |line| line.strip.start_with?(".:53 {") }
-    raise "Can't find main server line! '.:53 {' in Corefile" if main_server_line.nil?
-    cflines.insert(main_server_line + 1, *rewrite_lines)
+    cflines.push(*rewrite_lines)
 
     cflines.join("\n")
   end
@@ -60,14 +57,14 @@ class HairpinProxyController
   def check_and_rewrite_coredns
     @log.info("Polling all Ingress resources and CoreDNS configuration...")
     hosts = fetch_ingress_hosts
-    cm = @k8s.api.resource("configmaps", namespace: "kube-system").get("coredns")
+    cm = @k8s.api.resource("configmaps", namespace: "kube-system").get("coredns-custom")
 
-    old_corefile = cm.data.Corefile
+    old_corefile = cm.data["changeme.override"]
     new_corefile = coredns_corefile_with_rewrite_rules(old_corefile, hosts)
 
     if old_corefile.strip != new_corefile.strip
       @log.info("Corefile has changed! New contents:\n#{new_corefile}\nSending updated ConfigMap to Kubernetes API server...")
-      cm.data.Corefile = new_corefile
+      cm.data["changeme.override"] = new_corefile
       @k8s.api.resource("configmaps", namespace: "kube-system").update_resource(cm)
     end
   end

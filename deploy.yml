@@ -105,7 +105,7 @@ rules:
     resources:
       - configmaps
     resourceNames:
-      - coredns
+      - coredns-custom
     verbs:
       - get
       - watch
@@ -151,8 +151,9 @@ spec:
         runAsUser: 405
         runAsGroup: 65533
       containers:
-        - image: compumike/hairpin-proxy-controller:0.2.1
+        - image: registry.ske.eu01.stackit.cloud/test/hairpin-proxy-controller:latest
           name: main
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "50Mi"
