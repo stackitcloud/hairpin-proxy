@@ -7,7 +7,7 @@ If you've had problems with ingress-nginx, cert-manager, LetsEncrypt ACME HTTP01
 ## One-line install
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/compumike/hairpin-proxy/v0.2.1/deploy.yml
+kubectl apply -f https://raw.githubusercontent.com/stackitcloud/hairpin-proxy/master/deploy.yml
 ```
 
 If you're using [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) and [cert-manager](https://github.com/jetstack/cert-manager), it will work out of the box. See detailed installation and testing instructions below.
