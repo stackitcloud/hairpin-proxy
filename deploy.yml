@@ -151,7 +151,7 @@ spec:
         runAsUser: 405
         runAsGroup: 65533
       containers:
-        - image: registry.ske.eu01.stackit.cloud/test/hairpin-proxy-controller:latest
+        - image: reg.infra.ske.eu01.stackit.cloud/stackitcloud/hairpin-proxy-controller:latest
           name: main
           imagePullPolicy: Always
           resources:
